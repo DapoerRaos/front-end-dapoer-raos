@@ -51,6 +51,19 @@ export async function editProduct(id, data, token) {
   return response.data;
 }
 
+export async function updateStock(id, token, data) {
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/${id}`,
+    data,
+    {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    }
+  );
+  return response.data;
+}
+
 export async function deleteProduct(id, token) {
   const response = await axios.delete(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/${id}`,
