@@ -15,14 +15,21 @@ import {
   useDisclosure,
   Image,
 } from "@chakra-ui/react";
-import { List, House, Storefront } from "@phosphor-icons/react";
+import {
+  List,
+  Package,
+  House,
+  ShoppingBag,
+  ClipboardText,
+} from "@phosphor-icons/react";
 import Link from "next/link";
+import DashboardHeader from "../utils/DashboardHeader";
 
 const SidebarAdmin = ({ onClose, ...rest }) => {
   return (
     <Box
       transition="3s ease"
-      bg={"white"}
+      bg={"#1c2434"}
       borderRight="1px"
       borderRightColor={"gray.200"}
       w={{ base: "full", md: 60 }}
@@ -38,46 +45,97 @@ const SidebarAdmin = ({ onClose, ...rest }) => {
             width={50}
             height={50}
           />
-          <Text fontWeight={"semibold"} fontSize={"lg"}>
-            Dapoer Raos
-          </Text>
+          <Link href={"/"}>
+            <Text fontWeight={"semibold"} fontSize={"lg"} color={"white"}>
+              Dapoer Raos
+            </Text>
+          </Link>
         </Flex>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+        <CloseButton
+          display={{ base: "flex", md: "none" }}
+          color={"white"}
+          _hover={{ bg: "white", color: "#1c2434" }}
+          onClick={onClose}
+        />
       </Flex>
-      <Link href={"/admin/dashboard"} aria-label="Home">
-        <Flex
-          align="center"
-          p="4"
-          mx="4"
-          borderRadius="lg"
-          role="group"
-          cursor="pointer"
-          _hover={{
-            bg: "#feab3b",
-            color: "white",
-          }}
-        >
-          <Icon mr="4" fontSize={20} as={House} />
-          Dashboard
-        </Flex>
-      </Link>
-      <Link href={"/admin/dashboard/products"}>
-        <Flex
-          align="center"
-          p="4"
-          mx="4"
-          borderRadius="lg"
-          role="group"
-          cursor="pointer"
-          _hover={{
-            bg: "#feab3b",
-            color: "white",
-          }}
-        >
-          <Icon mr="4" fontSize={20} as={Storefront} />
-          Produk
-        </Flex>
-      </Link>
+      <Flex flexDirection={"column"} gap={1}>
+        <Link href={"/admin/dashboard"} aria-label="Home">
+          <Flex
+            align="center"
+            p="4"
+            mx="4"
+            borderRadius="lg"
+            role="group"
+            cursor="pointer"
+            color="white"
+            transition={"all 0.3s"}
+            _hover={{
+              bg: "white",
+              color: "#1c2434",
+            }}
+          >
+            <Icon mr="4" fontSize={20} as={House} />
+            <Text fontWeight={"medium"}>Dashboard</Text>
+          </Flex>
+        </Link>
+        <Link href={"/admin/dashboard/products"}>
+          <Flex
+            align="center"
+            p="4"
+            mx="4"
+            borderRadius="lg"
+            role="group"
+            cursor="pointer"
+            color="white"
+            transition={"all 0.3s"}
+            _hover={{
+              bg: "white",
+              color: "#1c2434",
+            }}
+          >
+            <Icon mr="4" fontSize={20} as={ShoppingBag} />
+            <Text fontWeight={"medium"}>Produk</Text>
+          </Flex>
+        </Link>
+        <Link href={"/admin/dashboard/stocks"} aria-label="Home">
+          <Flex
+            align="center"
+            p="4"
+            mx="4"
+            borderRadius="lg"
+            role="group"
+            cursor="pointer"
+            color="white"
+            transition={"all 0.3s"}
+            _hover={{
+              bg: "white",
+              color: "#1c2434",
+            }}
+          >
+            <Icon mr="4" fontSize={20} as={Package} />
+            <Text fontWeight={"medium"}>Stok</Text>
+          </Flex>
+        </Link>
+        <Link href={"/admin/dashboard/orders"} aria-label="Home">
+          <Flex
+            align="center"
+            p="4"
+            mx="4"
+            borderRadius="lg"
+            role="group"
+            cursor="pointer"
+            color="white"
+            transition={"all 0.3s"}
+            _hover={{
+              bg: "white",
+              color: "#1c2434",
+            }}
+          >
+            <Icon mr="4" fontSize={20} as={ClipboardText} />
+            <Text fontWeight={"medium"}>Pesanan</Text>
+          </Flex>
+        </Link>
+      </Flex>
     </Box>
   );
 };
@@ -85,13 +143,17 @@ const SidebarAdmin = ({ onClose, ...rest }) => {
 const MobileNav = ({ onOpen, ...rest }) => {
   return (
     <Flex
+      position={"sticky"}
+      top={0}
+      zIndex={10}
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
       height="14"
       alignItems="center"
       bg={"white"}
+      shadow={"md"}
       borderBottomWidth="1px"
-      borderBottomColor={"gray.200"}
+      borderBottomColor={"gray.300"}
       justifyContent={{ base: "space-between", md: "flex-end" }}
       {...rest}
     >
@@ -146,7 +208,13 @@ const MobileNav = ({ onOpen, ...rest }) => {
   );
 };
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = ({
+  children,
+  title,
+  description,
+  linkTitle,
+  linkHref,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -168,7 +236,14 @@ const DashboardLayout = ({ children }) => {
         </DrawerContent>
       </Drawer>
       <MobileNav onOpen={onOpen} />
-      {children}
+      <DashboardHeader
+        title={title}
+        description={description}
+        linkTitle={linkTitle}
+        linkHref={linkHref}
+      >
+        {children}
+      </DashboardHeader>
     </Box>
   );
 };
