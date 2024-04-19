@@ -40,8 +40,10 @@ const LoginForm = () => {
       const decodedToken = jwtDecode(token);
       if (decodedToken.role === "admin") {
         router.push("/admin/dashboard");
+        router.refresh();
       } else if (decodedToken.role === "customer") {
         router.push("/");
+        router.refresh();
       }
 
       successToast(response.message);
