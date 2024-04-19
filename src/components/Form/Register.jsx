@@ -28,17 +28,26 @@ const RegisterForm = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(true);
   const router = useRouter();
   const toast = useToast();
 
   const handleRegister = async (data) => {
+    if (data.password !== data.confirmPassword) {
+      setPasswordMatch(false);
+      failedToast("Passwords do not match");
+      return;
+    }
+
     try {
       const response = await registerUser(data);
       successToast(response.message);
       router.push("/auth/login");
+      // console.log(data);
     } catch (err) {
       failedToast(err.response.data.message);
       router.refresh();
@@ -65,8 +74,11 @@ const RegisterForm = () => {
     });
   };
 
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+
   return (
-    <Box rounded={"xl"} bg={"white"} boxShadow={"xl"} p={6}>
+    <Box rounded={"xl"} bg={"white"} boxShadow={"xl"} p={5}>
       <Stack spacing={4}>
         <Text align={"center"} fontWeight={"semibold"} fontSize={"xl"}>
           Daftar
@@ -135,6 +147,35 @@ const RegisterForm = () => {
             </InputGroup>
             <FormErrorMessage>
               {errors.password && errors.password.message}
+            </FormErrorMessage>
+          </FormControl>
+          <FormControl
+            id="confirmPassword"
+            mb={3}
+            isInvalid={!!errors.confirmPassword || !passwordMatch}
+          >
+            <InputGroup>
+              <Input
+                {...register("confirmPassword")}
+                type={showPassword ? "text" : "password"}
+                placeholder="Konfirmasi Password"
+                focusBorderColor="#feab3b"
+                fontSize={"sm"}
+                borderColor={"gray.300"}
+              />
+              <InputRightElement>
+                <IconButton
+                  bg={"transparent"}
+                  _hover={{ bg: "transparent" }}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              </InputRightElement>
+            </InputGroup>
+            <FormErrorMessage>
+              {errors.confirmPassword && errors.confirmPassword.message}
+              {!passwordMatch && "Password tidak cocok"}
             </FormErrorMessage>
           </FormControl>
           <FormControl id="telephone" mb={3} isInvalid={!!errors.telephone}>
