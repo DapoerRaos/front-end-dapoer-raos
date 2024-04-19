@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/images/dapoer-raos-logo.png" />
       </head>
-      <body suppressHydrationWarning={true}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>
