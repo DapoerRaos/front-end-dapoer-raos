@@ -16,13 +16,15 @@ const Pagination = ({ page, setPage, totalPages }) => {
   };
 
   return (
-    <div className="mt-2 flex justify-end items-center gap-2">
+    <div className="mt-6 mx-10 flex justify-end items-center gap-2">
       <Button
         onClick={handlePrevPage}
         as={IconButton}
         icon={<ChevronLeftIcon />}
         size={"sm"}
-        colorScheme={"green"}
+        bg={"#feab3b"}
+        color={"white"}
+        _hover={{ bg: "#fece3b" }}
       />
       <span className="text-sm">
         {page} of {totalPages}
@@ -32,7 +34,9 @@ const Pagination = ({ page, setPage, totalPages }) => {
         as={IconButton}
         icon={<ChevronRightIcon />}
         size={"sm"}
-        colorScheme={"green"}
+        bg={"#feab3b"}
+        color={"white"}
+        _hover={{ bg: "#fece3b" }}
       />
     </div>
   );
