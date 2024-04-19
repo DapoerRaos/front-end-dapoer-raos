@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
 function isTokenExpired(token) {
