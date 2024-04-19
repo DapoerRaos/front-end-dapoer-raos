@@ -73,7 +73,7 @@ const FormAddProduct = ({ category, token }) => {
 
   return (
     <form onSubmit={handleSubmit(handleAddProduct)}>
-      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 ">
         <FormControl
           id="namaProduk"
           mb={3}
