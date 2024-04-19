@@ -1,0 +1,13 @@
+const Footer = () => {
+  return (
+    <footer className="bg-white border-t relative bottom-0">
+      <div className="mx-auto py-8">
+        <p className="text-center text-xs text-black">
+          &copy; 2024 Dapoer Raos By Dee, Inc. All rights reserved
+        </p>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
