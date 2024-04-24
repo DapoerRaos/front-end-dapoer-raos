@@ -10,6 +10,7 @@ import {
   Button,
   Image,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -57,20 +58,24 @@ export default function Hero() {
             spacing={{ base: 4, sm: 6 }}
             direction={{ base: "column", sm: "row" }}
           >
-            <Button
-              rounded={"full"}
-              size={"md"}
-              fontWeight={"medium"}
-              color={"white"}
-              px={4}
-              bg={"#feab3b"}
-              _hover={{ bg: "#febb3b" }}
-            >
-              Lihat Produk
-            </Button>
-            {/* <Button rounded={"full"} size={"md"} fontWeight={"medium"} px={4}>
-              How It Works
-            </Button> */}
+            <Link href={"/products"}>
+              <Button
+                rounded={"full"}
+                size={"md"}
+                fontWeight={"medium"}
+                color={"white"}
+                px={4}
+                bg={"#feab3b"}
+                _hover={{ bg: "#febb3b" }}
+              >
+                Lihat Produk
+              </Button>
+            </Link>
+            <Link href={"/location"}>
+              <Button rounded={"full"} size={"md"} fontWeight={"medium"} px={4}>
+                Belanja Langsung
+              </Button>
+            </Link>
           </Stack>
         </Stack>
         <Flex
