@@ -14,6 +14,18 @@ export async function getCustomerById(token) {
   return response.data;
 }
 
+export async function getCustomerDetailById(token, id) {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/customers/${id}`,
+    {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    }
+  );
+  return response.data;
+}
+
 export async function editProfile(token, data) {
   const response = await axios.put(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/customers`,
