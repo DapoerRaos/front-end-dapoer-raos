@@ -76,10 +76,10 @@ export async function getOrderByCustomerId(token, page, keywords) {
   return response.data;
 }
 
-export async function updateOrderStatus(token, id, newStatus) {
+export async function updateOrderStatus(token, id, updateData) {
   const response = await axios.put(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders/status/${id}`,
-    newStatus,
+    updateData,
     {
       headers: {
         Cookie: `token=${token}`,
