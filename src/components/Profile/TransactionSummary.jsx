@@ -44,11 +44,12 @@ const TransactionSummary = ({ searchKeyword, token, customerData }) => {
           <Thead>
             <Tr>
               <Th>No</Th>
-              <Th>Order Id</Th>
-              <Th>Total Belanja</Th>
+              <Th>Order ID</Th>
+              <Th>Total</Th>
               <Th>Status</Th>
+              <Th>Tipe Pengiriman</Th>
+              <Th>Status Pengiriman</Th>
               <Th>Metode Pembayaran</Th>
-              <Th>Bank</Th>
               <Th>Action</Th>
             </Tr>
           </Thead>
@@ -81,6 +82,23 @@ const TransactionSummary = ({ searchKeyword, token, customerData }) => {
                         {item.status}
                       </p>
                     </Td>
+                    <Td>{item.shipping_type}</Td>
+                    <Td>
+                      {item.shipping_status === "Canceled"
+                        ? "Dibatalkan"
+                        : item.shipping_status === "Waiting"
+                        ? "Menunggu Pembayaran"
+                        : item.shipping_status === "Packaged"
+                        ? "Barang di Kemas"
+                        : item.shipping_status === "Ready"
+                        ? "Barang Siap Diambil"
+                        : item.shipping_status === "Delivered"
+                        ? "Barang Dikirim"
+                        : item.shipping_status === "Picked Up"
+                        ? "Barang Telah Diambil"
+                        : item.shipping_status === "Received" &&
+                          "Barang Telah Diterima"}
+                    </Td>
                     <Td>
                       <p className="text-sm capitalize">
                         {item.payment_method
@@ -88,16 +106,19 @@ const TransactionSummary = ({ searchKeyword, token, customerData }) => {
                           : ""}
                       </p>
                     </Td>
-                    {item.bank !== "" && (
+                    {/* {item.bank !== "" && (
                       <Td>
                         <p className="text-sm uppercase">{item.bank}</p>
                       </Td>
-                    )}
+                    )} */}
                     <Td>
                       <DropdownAction
                         id={item.id}
                         userId={customerData.user_id}
                         status={item.status}
+                        shipping_type={item.shipping_type}
+                        shipping_status={item.shipping_status}
+                        token={token}
                       />
                     </Td>
                   </Tr>
