@@ -212,6 +212,48 @@ const FormEditProfile = ({ id, customerData, token }) => {
             {!passwordMatch && "Password tidak cocok"}
           </FormErrorMessage>
         </FormControl>
+        <FormControl
+          id="postal_code"
+          mb={3}
+          w={{ base: "100%", md: "66%" }}
+          isInvalid={!!errors.postal_code}
+        >
+          <FormLabel fontSize={"sm"}>Kode Pos</FormLabel>
+          <Input
+            {...register("postal_code")}
+            type="text"
+            focusBorderColor="#feab3b"
+            fontSize={"sm"}
+            defaultValue={customerData.postal_code}
+            placeholder={customerData.postal_code}
+            resize={"none"}
+            borderColor={"gray.300"}
+          />
+          <FormErrorMessage>
+            {errors.address && errors.address.message}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl
+          id="city"
+          mb={3}
+          w={{ base: "100%", md: "66%" }}
+          isInvalid={!!errors.city}
+        >
+          <FormLabel fontSize={"sm"}>Kota</FormLabel>
+          <Input
+            {...register("city")}
+            type="text"
+            focusBorderColor="#feab3b"
+            fontSize={"sm"}
+            defaultValue={customerData.city}
+            placeholder={customerData.city}
+            resize={"none"}
+            borderColor={"gray.300"}
+          />
+          <FormErrorMessage>
+            {errors.address && errors.address.message}
+          </FormErrorMessage>
+        </FormControl>
         <FormControl id="address" mb={3} isInvalid={!!errors.address}>
           <FormLabel fontSize={"sm"}>Alamat</FormLabel>
           <Textarea
@@ -239,7 +281,7 @@ const FormEditProfile = ({ id, customerData, token }) => {
         transition={"all 0.2s"}
         type="submit"
       >
-        Edit Profile
+        Simpan Perubahan
       </Button>
     </form>
   );
