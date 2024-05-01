@@ -32,6 +32,7 @@ const RegisterForm = () => {
     formState: { errors },
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const router = useRouter();
   const toast = useToast();
@@ -50,7 +51,6 @@ const RegisterForm = () => {
       // console.log(data);
     } catch (err) {
       failedToast(err.response.data.message);
-      router.refresh();
     }
   };
 
@@ -84,118 +84,162 @@ const RegisterForm = () => {
           Daftar
         </Text>
         <form onSubmit={handleSubmit(handleRegister)}>
-          <FormControl id="fullname" mb={3} isInvalid={!!errors.fullname}>
-            <Input
-              {...register("fullname", {
-                required: "Nama lengkap wajib diisi",
-              })}
-              type="text"
-              focusBorderColor="#feab3b"
-              placeholder="Nama Lengkap"
-              fontSize={"sm"}
-              borderColor={"gray.300"}
-            />
-            <FormErrorMessage>
-              {errors.fullname && errors.fullname.message}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl id="email" mb={3} isInvalid={!!errors.email}>
-            <Input
-              {...register("email", {
-                required: "Email wajib diisi",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Email tidak valid",
-                },
-              })}
-              type="email"
-              focusBorderColor="#feab3b"
-              placeholder="Email"
-              fontSize={"sm"}
-              borderColor={"gray.300"}
-            />
-            <FormErrorMessage>
-              {errors.email && errors.email.message}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl id="password" mb={3} isInvalid={!!errors.password}>
-            <InputGroup>
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4">
+            <FormControl id="fullname" mb={3} isInvalid={!!errors.fullname}>
               <Input
-                {...register("password", {
-                  required: "Password wajib diisi",
-                  minLength: {
-                    value: 8,
-                    message: "Password minimal 8 karakter",
+                {...register("fullname", {
+                  required: "Nama lengkap wajib diisi",
+                })}
+                type="text"
+                focusBorderColor="#feab3b"
+                placeholder="Nama Lengkap"
+                fontSize={"sm"}
+                borderColor={"gray.300"}
+              />
+              <FormErrorMessage>
+                {errors.fullname && errors.fullname.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl id="email" mb={3} isInvalid={!!errors.email}>
+              <Input
+                {...register("email", {
+                  required: "Email wajib diisi",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Email tidak valid",
                   },
                 })}
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
+                type="email"
                 focusBorderColor="#feab3b"
+                placeholder="Email"
                 fontSize={"sm"}
-                minLength={8}
                 borderColor={"gray.300"}
               />
-              <InputRightElement>
-                <IconButton
-                  bg={"transparent"}
-                  _hover={{ bg: "transparent" }}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  onClick={() => setShowPassword(!showPassword)}
+              <FormErrorMessage>
+                {errors.email && errors.email.message}
+              </FormErrorMessage>
+            </FormControl>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4">
+            <FormControl id="password" mb={3} isInvalid={!!errors.password}>
+              <InputGroup>
+                <Input
+                  {...register("password", {
+                    required: "Password wajib diisi",
+                    minLength: {
+                      value: 8,
+                      message: "Password minimal 8 karakter",
+                    },
+                  })}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  focusBorderColor="#feab3b"
+                  fontSize={"sm"}
+                  minLength={8}
+                  borderColor={"gray.300"}
                 />
-              </InputRightElement>
-            </InputGroup>
-            <FormErrorMessage>
-              {errors.password && errors.password.message}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl
-            id="confirmPassword"
-            mb={3}
-            isInvalid={!!errors.confirmPassword || !passwordMatch}
-          >
-            <InputGroup>
+                <InputRightElement>
+                  <IconButton
+                    bg={"transparent"}
+                    _hover={{ bg: "transparent" }}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                    onClick={() => setShowPassword(!showPassword)}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage>
+                {errors.password && errors.password.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl id="telephone" mb={3} isInvalid={!!errors.telephone}>
+              <PhoneInput
+                className="w-full p-[10px] border border-gray-300 rounded-md focus:border-[#feab3b] text-sm "
+                defaultCountry="ID"
+                international={false}
+                onChange={(value) => setValue("telephone", value)}
+                placeholder="No Hp"
+              />
+              <FormErrorMessage>
+                {errors.telephone && errors.telephone.message}
+              </FormErrorMessage>
+            </FormControl>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4">
+            <FormControl
+              id="confirmPassword"
+              mb={3}
+              isInvalid={!!errors.confirmPassword || !passwordMatch}
+            >
+              <InputGroup>
+                <Input
+                  {...register("confirmPassword")}
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Konfirmasi Password"
+                  focusBorderColor="#feab3b"
+                  fontSize={"sm"}
+                  borderColor={"gray.300"}
+                />
+                <InputRightElement>
+                  <IconButton
+                    bg={"transparent"}
+                    _hover={{ bg: "transparent" }}
+                    aria-label={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
+                    icon={showConfirmPassword ? <ViewOffIcon /> : <ViewIcon />}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage>
+                {errors.confirmPassword && errors.confirmPassword.message}
+                {!passwordMatch && "Password tidak cocok"}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              id="postal_code"
+              mb={3}
+              isInvalid={!!errors.postal_code}
+            >
               <Input
-                {...register("confirmPassword")}
-                type={showPassword ? "text" : "password"}
-                placeholder="Konfirmasi Password"
+                {...register("postal_code", {
+                  required: "Kode Pos wajib diisi",
+                })}
+                type="text"
                 focusBorderColor="#feab3b"
+                placeholder="Kode Pos"
                 fontSize={"sm"}
+                resize={"none"}
                 borderColor={"gray.300"}
               />
-              <InputRightElement>
-                <IconButton
-                  bg={"transparent"}
-                  _hover={{ bg: "transparent" }}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  onClick={() => setShowPassword(!showPassword)}
-                />
-              </InputRightElement>
-            </InputGroup>
+              <FormErrorMessage>
+                {errors.postal_code && errors.postal_code.message}
+              </FormErrorMessage>
+            </FormControl>
+          </div>
+          <FormControl id="city" mb={3} isInvalid={!!errors.city}>
+            <Input
+              {...register("city", { required: "Kota wajib diisi" })}
+              type="text"
+              focusBorderColor="#feab3b"
+              placeholder="Asal Kota"
+              fontSize={"sm"}
+              resize={"none"}
+              borderColor={"gray.300"}
+            />
             <FormErrorMessage>
-              {errors.confirmPassword && errors.confirmPassword.message}
-              {!passwordMatch && "Password tidak cocok"}
+              {errors.city && errors.city.message}
             </FormErrorMessage>
           </FormControl>
-          <FormControl id="telephone" mb={3} isInvalid={!!errors.telephone}>
-            <PhoneInput
-              className="w-full p-[10px] border border-gray-300 rounded-md focus:border-[#feab3b] text-sm "
-              defaultCountry="ID"
-              international={false}
-              onChange={(value) => setValue("telephone", value)}
-              placeholder="No Hp"
-            />
-          </FormControl>
-          <FormErrorMessage>
-            {errors.telephone && errors.telephone.message}
-          </FormErrorMessage>
           <FormControl id="address" mb={3} isInvalid={!!errors.address}>
             <Textarea
               {...register("address", { required: "Alamat wajib diisi" })}
               type="text"
               focusBorderColor="#feab3b"
-              placeholder="Alamat"
+              placeholder="Alamat Lengkap"
               fontSize={"sm"}
               resize={"none"}
               borderColor={"gray.300"}
