@@ -24,6 +24,7 @@ import {
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import DashboardHeader from "../utils/DashboardHeader";
+import ButtonLogout from "../utils/ButtonLogout";
 
 const SidebarAdmin = ({ onClose, ...rest }) => {
   return (
@@ -135,6 +136,7 @@ const SidebarAdmin = ({ onClose, ...rest }) => {
             <Text fontWeight={"medium"}>Pesanan</Text>
           </Flex>
         </Link>
+        <ButtonLogout isAdmin={true} />
       </Flex>
     </Box>
   );
