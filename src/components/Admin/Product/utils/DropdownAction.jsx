@@ -22,17 +22,15 @@ import {
 } from "@chakra-ui/react";
 import { DotsThree } from "@phosphor-icons/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const DropdownAction = ({ id, token }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter();
   const toast = useToast();
 
   const handleDeleteProduct = async () => {
     const response = await deleteProduct(id, token);
     onClose();
-    router.refresh();
+    location.reload();
     toast({
       title: response.message,
       status: "success",
@@ -64,12 +62,12 @@ const DropdownAction = ({ id, token }) => {
       </MenuList>
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent alignItems={"center"}>
-          <ModalHeader fontSize={"md"} textAlign={"center"}>
+        <ModalContent>
+          <ModalHeader fontSize={"sm"} textAlign={"center"}>
             Apakah anda yakin ingin menghapus produk ini?
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody textAlign={"center"}>
             <Text>Tekan &quot;Hapus Produk&quot; untuk menghapus</Text>
           </ModalBody>
           <ModalFooter>
