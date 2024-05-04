@@ -1,7 +1,7 @@
 "use client";
 
 import { AddIcon } from "@chakra-ui/icons";
-import { Button, Input, useToast } from "@chakra-ui/react";
+import { Button, Input } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import ProductTable from "./ProductTable";
@@ -9,7 +9,6 @@ import ProductTable from "./ProductTable";
 export default function ProductControl({ token }) {
   const searchRef = useRef();
   const router = useRouter();
-  const toast = useToast();
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const handleSearch = (event) => {
@@ -40,7 +39,7 @@ export default function ProductControl({ token }) {
         </div>
         <LinkAddProduct />
       </div>
-      <ProductTable seacrhKeyword={searchKeyword} token={token} />
+      <ProductTable searchKeyword={searchKeyword} token={token} />
     </>
   );
 }
