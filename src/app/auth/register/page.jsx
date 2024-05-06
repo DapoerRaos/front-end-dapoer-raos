@@ -1,8 +1,8 @@
 import { Flex, Stack, Text, Image } from "@chakra-ui/react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import ButtonBack from "@/components/Form/Register/ButtonBack";
 import RegisterForm from "@/components/Form/Register";
+import ButtonBack from "@/components/Form/utils/ButtonBack";
 
 export default function Register() {
   const cookieStore = cookies();
@@ -14,15 +14,9 @@ export default function Register() {
 
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"} bg={"gray.100"}>
-      <Stack
-        spacing={2}
-        mx={"auto"}
-        w={{ base: "sm", md: "md" }}
-        py={12}
-        px={6}
-      >
+      <div>
         <ButtonBack />
-        <Flex justifyContent={"center"} alignItems={"center"}>
+        <Flex justifyContent={"center"} alignItems={"center"} mb={4}>
           <Image
             src="/images/dapoer-raos-logo.png"
             alt="logo"
@@ -34,7 +28,7 @@ export default function Register() {
           </Text>
         </Flex>
         <RegisterForm />
-      </Stack>
+      </div>
     </Flex>
   );
 }
