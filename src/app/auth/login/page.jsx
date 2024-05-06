@@ -1,5 +1,5 @@
 import LoginForm from "@/components/Form/Login";
-import ButtonBack from "@/components/Form/Login/ButtonBack";
+import ButtonBack from "@/components/Form/utils/ButtonBack";
 import { Flex, Stack, Text, Image } from "@chakra-ui/react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
