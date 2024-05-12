@@ -187,27 +187,48 @@ const FormAddProduct = ({ category, token }) => {
           </FormErrorMessage>
         </FormControl>
         <FormControl
-          id="deskripsi"
+          id="beratProduk"
           mb={3}
-          w={{ base: "100%", md: "80%" }}
-          isInvalid={!!errors.deskripsi}
+          w={{ base: "100%", md: "66%" }}
+          isInvalid={!!errors.beratProduk}
         >
-          <FormLabel fontSize={"sm"}>Deskripsi</FormLabel>
-          <Textarea
-            {...register("description", {
-              required: "Deskripsi produk wajib diisi",
+          <FormLabel fontSize={"sm"}>Berat Produk (kg)</FormLabel>
+          <Input
+            {...register("weight", {
+              required: "Berat Produk wajib diisi",
             })}
-            type="text"
+            type="number"
+            step={0.01}
             focusBorderColor="#feab3b"
             fontSize={"sm"}
-            resize={"none"}
             borderColor={"gray.300"}
           />
           <FormErrorMessage>
-            {errors.deskripsi && errors.deskripsi.message}
+            {errors.beratProduk && errors.beratProduk.message}
           </FormErrorMessage>
         </FormControl>
       </div>
+      <FormControl
+        id="deskripsi"
+        mb={3}
+        w={{ base: "100%", md: "80%" }}
+        isInvalid={!!errors.deskripsi}
+      >
+        <FormLabel fontSize={"sm"}>Deskripsi</FormLabel>
+        <Textarea
+          {...register("description", {
+            required: "Deskripsi produk wajib diisi",
+          })}
+          type="text"
+          focusBorderColor="#feab3b"
+          fontSize={"sm"}
+          resize={"none"}
+          borderColor={"gray.300"}
+        />
+        <FormErrorMessage>
+          {errors.deskripsi && errors.deskripsi.message}
+        </FormErrorMessage>
+      </FormControl>
 
       <Button
         bg={"#feab3b"}
