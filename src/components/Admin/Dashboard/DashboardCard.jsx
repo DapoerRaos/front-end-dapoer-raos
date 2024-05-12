@@ -1,7 +1,7 @@
 "use client";
 
 import { getOrderByStatus, getOrders } from "@/libs/order-libs";
-import { getProducts } from "@/libs/product-libs";
+import { getProducts, getProductsStock } from "@/libs/product-libs";
 import { formatPrice } from "@/libs/utils/PriceFormat";
 import {
   Money,
@@ -25,7 +25,8 @@ const DashboardCard = ({ token }) => {
         setIncome(orderStatus.data.income);
         const product = await getProducts();
         setTotalProduct(product.pagination.total);
-        setTotalStock(product.totalStock);
+        const productStock = await getProductsStock();
+        setTotalStock(productStock.data);
         const allOrder = await getOrders(token);
         setTotalOrder(allOrder.data.pagination.total);
       } catch (err) {
