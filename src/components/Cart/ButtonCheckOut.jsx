@@ -1,6 +1,8 @@
 "use client";
 
 import { deleteCartItemByCartId } from "@/libs/cart-libs";
+import { calculateShippingCost } from "@/libs/utils/CalculateShippingCost";
+import { formatPrice } from "@/libs/utils/PriceFormat";
 import {
   Box,
   Button,
@@ -29,12 +31,24 @@ const ButtonCheckOut = ({ cookieToken, userCart }) => {
   const [shippingType, setShippingType] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [confirmAddress, setConfirmAddress] = useState("");
+  const [shippingCost, setShippingCost] = useState(0);
   const toast = useToast();
   const router = useRouter();
 
   const handleShippingTypeChange = (event) => {
     const selectedShippingType = event.target.value;
     setShippingType(selectedShippingType);
+
+    if (selectedShippingType === "Delivery") {
+      let totalWeight = 0;
+      userCart.cart_items.forEach((item) => {
+        totalWeight += item.Product.weight * item.quantity;
+      });
+
+      setShippingCost(calculateShippingCost(totalWeight));
+    } else {
+      setShippingCost(0);
+    }
 
     setPaymentType("");
   };
@@ -154,6 +168,7 @@ const ButtonCheckOut = ({ cookieToken, userCart }) => {
       order_id: `TRX-${nanoid(4)}-${nanoid(6)}`,
       fullname: userCart.user_customer.name,
       telephone: userCart.user_customer.phone,
+      shipping_cost: shippingCost,
       products: userCart.cart_items.map((item) => ({
         id: item.Product.id,
         name: item.Product.name,
@@ -207,6 +222,7 @@ const ButtonCheckOut = ({ cookieToken, userCart }) => {
                       ? "Ready"
                       : shippingType === "Delivery" && "Packaged",
                   shipping_type: shippingType,
+                  shipping_cost: shippingCost,
                   payment_method: result.payment_type,
                   va_number:
                     result.va_numbers[0]?.va_number ||
@@ -304,6 +320,7 @@ const ButtonCheckOut = ({ cookieToken, userCart }) => {
                   status: "Pending",
                   shipping_status: "Waiting",
                   shipping_type: shippingType,
+                  shipping_cost: shippingCost,
                   payment_method: result.payment_type,
                   va_number:
                     result.va_numbers[0]?.va_number ||
@@ -464,6 +481,12 @@ const ButtonCheckOut = ({ cookieToken, userCart }) => {
               </FormControl>
             ) : shippingType === "Delivery" ? (
               <>
+                <Box my={2} bg={"gray.100"} p={3} rounded={"md"}>
+                  <Text fontSize="sm">
+                    <span className="font-semibold">Tambahan Ongkir:</span>{" "}
+                    {formatPrice(shippingCost)}
+                  </Text>
+                </Box>
                 <FormControl
                   id="confirmAddress"
                   mb={3}
@@ -484,7 +507,10 @@ const ButtonCheckOut = ({ cookieToken, userCart }) => {
                     <option value="Belum">Tidak, Belum</option>
                   </Select>
                 </FormControl>
-                <Box mt={2} bg={"gray.200"} p={3} rounded={"md"}>
+                <Box mt={2} bg={"gray.100"} p={3} rounded={"md"}>
+                  <Text fontSize="sm" fontWeight={"semibold"}>
+                    Alamat:
+                  </Text>
                   <Text fontSize="sm">{userCart.user_customer.address}</Text>
                   <Text fontSize="sm">
                     {userCart.user_customer.city},{" "}
