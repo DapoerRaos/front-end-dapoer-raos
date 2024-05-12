@@ -57,6 +57,7 @@ const ProductTable = ({ searchKeyword, token }) => {
               <Th>No</Th>
               <Th>Nama</Th>
               <Th>Harga</Th>
+              <Th>Berat</Th>
               <Th>Stok</Th>
               <Th>Action</Th>
             </Tr>
@@ -75,6 +76,7 @@ const ProductTable = ({ searchKeyword, token }) => {
                     <Td>{index + 1}</Td>
                     <Td>{product.name}</Td>
                     <Td>{formatPrice(product.price)}</Td>
+                    <Td>{product.weight} Kg</Td>
                     <Td>{product.stock}</Td>
                     <Td>
                       <DropdownAction id={product.id} token={token} />
