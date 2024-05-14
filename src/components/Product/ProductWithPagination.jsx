@@ -64,9 +64,14 @@ const ProductWithPagination = ({ searchKeyword, token }) => {
                 <Text color={"gray.600"} fontSize={"sm"}>
                   {product.category_name}
                 </Text>
-                <Text fontWeight={"bold"} fontSize={{ base: "sm", md: "md" }}>
-                  {product.name}
-                </Text>
+                <div className="flex justify-between items-center">
+                  <Text fontWeight={"bold"} fontSize={{ base: "sm", md: "md" }}>
+                    {product.name}
+                  </Text>
+                  <Text color={"gray.600"} fontSize={"xs"}>
+                    {product.weight} Kg
+                  </Text>
+                </div>
                 <div className="flex justify-between items-center">
                   <Text color={"#feab3b"} fontWeight={"semibold"}>
                     {formatPrice(product.price)}
