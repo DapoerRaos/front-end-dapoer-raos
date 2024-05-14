@@ -245,6 +245,20 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
           <p className="text-sm">Tanggal Transaksi</p>
           <p className="text-sm font-medium uppercase">{data.payment_date}</p>
         </div>
+        {data.shipping_type === "Delivery" && (
+          <div className="mt-2 flex justify-between items-center">
+            <p className="text-sm">Ongkos Kirim</p>
+            <p className="text-sm font-medium uppercase">
+              {formatPrice(data.shipping_cost)}
+            </p>
+          </div>
+        )}
+        <div className="mt-2 flex justify-between items-center">
+          <p className="text-sm">Total Harga Barang</p>
+          <p className="text-sm font-medium uppercase">
+            {formatPrice(data.total_price - data.shipping_cost)}
+          </p>
+        </div>
       </div>
       <div className="mt-6 space-y-4">
         <div className="flex items-center justify-between border-t border-gray-200 pt-4">
