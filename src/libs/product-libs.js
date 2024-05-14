@@ -16,6 +16,13 @@ export async function getProducts(page, keywords) {
   return response.data;
 }
 
+export async function getProductsStock() {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/stock`
+  );
+  return response.data;
+}
+
 export async function getProductById(id) {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/${id}`
