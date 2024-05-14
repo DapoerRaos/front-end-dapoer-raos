@@ -87,11 +87,14 @@ const DetailProductCard = ({ id, token }) => {
           <Text fontSize={"xl"}>{formatPrice(product.price)}</Text>
           <Divider border={"1px"} color={"gray.400"} rounded={"full"} />
           <Text fontSize={"lg"} fontWeight={"semibold"}>
-            Description:
+            Deskripsi:
           </Text>
-          <Text fontSize={"sm"}>{product.category_name}</Text>
-          <Text fontSize={"sm"}>Stok Tersedia: {product.stock}</Text>
           <Text fontSize={"sm"}>{product.description}</Text>
+          <div>
+            <Text fontSize={"sm"}>Kategori: {product.category_name}</Text>
+            <Text fontSize={"sm"}>Stok Tersedia: {product.stock}</Text>
+            <Text fontSize={"sm"}>Berat: {product.weight} Kg</Text>
+          </div>
         </div>
         {(isCustomer || !token) && (
           <>
