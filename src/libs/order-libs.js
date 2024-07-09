@@ -2,15 +2,29 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-export async function getOrders(token, page, keywords) {
+export async function getOrders(token, page, keywords, startDate, endDate) {
   let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders`;
 
+  const queryParams = [];
+
   if (page) {
-    url += `?page=${page}`;
+    queryParams.push(`page=${page}`);
   }
 
   if (keywords) {
-    url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders?keyword=${keywords}`;
+    queryParams.push(`keyword=${keywords}`);
+  }
+
+  if (startDate) {
+    queryParams.push(`startDate=${startDate}`);
+  }
+
+  if (endDate) {
+    queryParams.push(`endDate=${endDate}`);
+  }
+
+  if (queryParams.length > 0) {
+    url += `?${queryParams.join("&")}`;
   }
 
   const response = await axios.get(url, {
@@ -18,6 +32,95 @@ export async function getOrders(token, page, keywords) {
       Cookie: `token=${token}`,
     },
   });
+  return response.data;
+}
+
+export async function getOrderByDate(token, keywords, startDate, endDate) {
+  let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders/date`;
+
+  const queryParams = [];
+
+  if (keywords) {
+    queryParams.push(`keyword=${keywords}`);
+  }
+
+  if (startDate) {
+    queryParams.push(`startDate=${startDate}`);
+  }
+
+  if (endDate) {
+    queryParams.push(`endDate=${endDate}`);
+  }
+
+  if (queryParams.length > 0) {
+    url += `?${queryParams.join("&")}`;
+  }
+
+  const response = await axios.get(url, {
+    headers: {
+      Cookie: `token=${token}`,
+    },
+  });
+  return response.data;
+}
+
+export async function createOrder(token, data) {
+  const {
+    id,
+    customer_id,
+    shipping_id,
+    total_price,
+    status,
+    payment_method,
+    va_number,
+    bank,
+    payment_date,
+  } = data;
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders`,
+    {
+      id,
+      customer_id,
+      shipping_id,
+      total_price,
+      status,
+      payment_method,
+      va_number,
+      bank,
+      payment_date,
+    },
+    {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    }
+  );
+  return response.data;
+}
+
+export async function createOrderItem(token, data) {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders/items`,
+    data,
+    {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    }
+  );
+  return response.data;
+}
+
+export async function paymentOrder(token, data) {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders/payment`,
+    data,
+    {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    }
+  );
   return response.data;
 }
 
