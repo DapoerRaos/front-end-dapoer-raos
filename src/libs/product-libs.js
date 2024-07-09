@@ -23,6 +23,19 @@ export async function getProductsStock() {
   return response.data;
 }
 
+export async function updateProductStock(token, data) {
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/stock`,
+    data,
+    {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    }
+  );
+  response.data;
+}
+
 export async function getProductById(id) {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/${id}`
