@@ -18,6 +18,14 @@ export async function loginUser(data) {
   return response.data;
 }
 
+export async function changePassword(data) {
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/change-password`,
+    data
+  );
+  return response.data;
+}
+
 export async function logoutUser() {
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`
