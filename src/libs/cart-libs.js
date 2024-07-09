@@ -64,7 +64,7 @@ export async function removeCartItem(id, token) {
   return response.data;
 }
 
-export async function deleteCartItemByCartId(cart_id, token) {
+export async function deleteCartItemByCartId(token, cart_id) {
   const response = await axios.delete(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/detail/cart-id/${cart_id}`,
     {
