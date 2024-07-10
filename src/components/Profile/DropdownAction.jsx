@@ -1,3 +1,5 @@
+"use client";
+
 import { updateOrderStatus } from "@/libs/order-libs";
 import { ViewIcon } from "@chakra-ui/icons";
 import {
@@ -16,28 +18,47 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { Check, DotsThree } from "@phosphor-icons/react";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 const DropdownAction = ({
   id,
   userId,
+  shipping_id,
   status,
   shipping_type,
   shipping_status,
   token,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleConfirmOrder = async () => {
-    const updateData = {
-      shipping_status: "Received",
-    };
-    await updateOrderStatus(token, id, updateData);
-    onClose();
-    location.reload();
+    try {
+      setIsLoading(true);
+      const updateData = {
+        shipping_id,
+        shipping_status: "Barang Telah Diterima",
+      };
+      await updateOrderStatus(token, id, updateData);
+      onClose();
+      toast({
+        title: "Pesanan telah diterima",
+        status: "success",
+        duration: 2000,
+        position: "top",
+        isClosable: true,
+      });
+      location.reload();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,8 +76,8 @@ const DropdownAction = ({
           <MenuItem icon={<ViewIcon />}>Detail</MenuItem>
         </Link>
         {shipping_type === "Delivery" &&
-          shipping_status !== "Received" &&
-          status === "Paid" && (
+          shipping_status !== "Barang Telah Diterima" &&
+          status === "Lunas" && (
             <MenuItem icon={<Check />} onClick={onOpen}>
               Konfirmasi Pesanan
             </MenuItem>
@@ -77,12 +98,19 @@ const DropdownAction = ({
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="red" size={"sm"} mr={3} onClick={onClose}>
+            <Button
+              colorScheme="red"
+              size={"sm"}
+              mr={3}
+              isDisabled={isLoading}
+              onClick={onClose}
+            >
               Kembali
             </Button>
             <Button
               colorScheme="green"
               size={"sm"}
+              isDisabled={isLoading}
               onClick={() => handleConfirmOrder()}
             >
               Konfirmasi
