@@ -48,16 +48,13 @@ export default function Hero() {
               Dewi Ratnasari
             </Text>
           </Heading>
-          <Text color={"gray.500"}>
+          <Text color={"gray.500"} textAlign={"justify"}>
             Selamat datang di Dapoer Raos, tempat yang menyajikan beragam kue
             kering untuk menemani Anda dalam momen santai, serta koleksi frozen
             food yang siap mempermudah Anda dalam menyajikan hidangan lezat di
             meja makan.
           </Text>
-          <Stack
-            spacing={{ base: 4, sm: 6 }}
-            direction={{ base: "column", sm: "row" }}
-          >
+          <Stack spacing={{ base: 4, sm: 6 }} direction={"row"}>
             <Link href={"/products"}>
               <Button
                 rounded={"full"}
@@ -96,7 +93,7 @@ export default function Hero() {
             <Image
               alt={"Hero Image"}
               fit={"cover"}
-              align={"center"}
+              // align={"center"}
               w={"100%"}
               h={"100%"}
               src={"/images/banner.jpeg"}
