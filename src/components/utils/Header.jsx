@@ -5,7 +5,7 @@ import Link from "next/link";
 const Header = ({ title, linkHref, linkTitle, productLength }) => {
   return (
     <div className="py-4 mx-10 flex justify-between items-center">
-      <h1 className="text-3xl text-[#feab3b] font-bold">
+      <h1 className="text-2xl lg:text-3xl text-[#feab3b] font-bold">
         {title} {productLength && ` (${productLength})`}
       </h1>
       {linkHref && linkTitle ? (
