@@ -4,6 +4,7 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -131,17 +132,30 @@ const LoginForm = () => {
             </FormErrorMessage>
           </FormControl>
           <Stack spacing={4}>
-            <Stack direction={{ base: "column", sm: "row" }} justify={"end"}>
+            <Flex
+              direction={{ base: "column", sm: "row" }}
+              justifyContent="space-between"
+              w="full"
+            >
+              <Link href="/auth/forgot-password">
+                <Text
+                  _hover={{ cursor: "pointer", color: "#febb5f" }}
+                  transition="all 0.2s"
+                  fontSize="sm"
+                >
+                  Lupa Password
+                </Text>
+              </Link>
               <Link href="/auth/register">
                 <Text
                   _hover={{ cursor: "pointer", color: "#febb5f" }}
-                  transition={"all 0.2s"}
-                  fontSize={"sm"}
+                  transition="all 0.2s"
+                  fontSize="sm"
                 >
                   Belum Punya Akun?
                 </Text>
               </Link>
-            </Stack>
+            </Flex>
             <Button
               bg={"#feab3b"}
               color={"white"}
