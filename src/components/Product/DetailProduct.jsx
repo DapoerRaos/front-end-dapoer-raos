@@ -3,6 +3,7 @@
 import { addItemToCart } from "@/libs/cart-libs";
 import { getProductById } from "@/libs/product-libs";
 import { formatPrice } from "@/libs/utils/PriceFormat";
+import { formatWeight } from "@/libs/utils/WeightFormatter";
 import { Button, Divider, Image, Text, useToast } from "@chakra-ui/react";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
@@ -92,8 +93,17 @@ const DetailProductCard = ({ id, token }) => {
           <Text fontSize={"sm"}>{product.description}</Text>
           <div>
             <Text fontSize={"sm"}>Kategori: {product.category_name}</Text>
-            <Text fontSize={"sm"}>Stok Tersedia: {product.stock}</Text>
-            <Text fontSize={"sm"}>Berat: {product.weight} Kg</Text>
+            <Text
+              fontSize={"sm"}
+              className={`${product.stock <= 3 ? "text-red-500" : ""}`}
+            >
+              {product.stock === 0
+                ? `Stok Habis`
+                : product.stock <= 3
+                ? `Stok tersisa ${product.stock}`
+                : `Stok tersedia ${product.stock}`}
+            </Text>
+            <Text fontSize={"sm"}>Berat: {formatWeight(product.weight)}</Text>
           </div>
         </div>
         {(isCustomer || !token) && (
