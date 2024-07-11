@@ -1,4 +1,5 @@
 import DashboardCard from "@/components/Admin/Dashboard/DashboardCard";
+import ProductInformation from "@/components/Admin/Dashboard/ProductInformation";
 import DashboardLayout from "@/components/Layouts/DashboardLayout";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
@@ -20,6 +21,7 @@ const Page = async () => {
   return (
     <DashboardLayout title={"Dashboard"}>
       <DashboardCard token={token} />
+      <ProductInformation token={token} />
     </DashboardLayout>
   );
 };
