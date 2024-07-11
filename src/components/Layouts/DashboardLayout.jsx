@@ -21,6 +21,7 @@ import {
   House,
   ShoppingBag,
   ClipboardText,
+  FileText,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import DashboardHeader from "../utils/DashboardHeader";
@@ -134,6 +135,25 @@ const SidebarAdmin = ({ onClose, ...rest }) => {
           >
             <Icon mr="4" fontSize={20} as={ClipboardText} />
             <Text fontWeight={"medium"}>Pesanan</Text>
+          </Flex>
+        </Link>
+        <Link href={"/admin/dashboard/report"} aria-label="Home">
+          <Flex
+            align="center"
+            p="4"
+            mx="4"
+            borderRadius="lg"
+            role="group"
+            cursor="pointer"
+            color="white"
+            transition={"all 0.3s"}
+            _hover={{
+              bg: "white",
+              color: "#1c2434",
+            }}
+          >
+            <Icon mr="4" fontSize={20} as={FileText} />
+            <Text fontWeight={"medium"}>Laporan</Text>
           </Flex>
         </Link>
         <ButtonLogout isAdmin={true} />
