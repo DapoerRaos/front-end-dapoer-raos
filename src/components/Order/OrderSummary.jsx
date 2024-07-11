@@ -1,6 +1,7 @@
 "use client";
 
 import { getTransactionStatus, updateOrderStatus } from "@/libs/order-libs";
+import { updateProductStock } from "@/libs/product-libs";
 import { formatPrice } from "@/libs/utils/PriceFormat";
 import {
   Button,
@@ -11,7 +12,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -20,13 +20,13 @@ import { useEffect, useState } from "react";
 const OrderSummary = ({ token, data, orderItems, customerData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [expireTime, setExpireTime] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getTransactionStatus(token, data.id);
-        console.log(response.data.expiry_time);
         setExpireTime(response.data.expiry_time);
       } catch (err) {
         console.log(err);
@@ -37,58 +37,57 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
   }, [token, data.id]);
 
   const handleReCheckStatus = async (id) => {
-    const response = await getTransactionStatus(token, id);
-    if (response.data.transaction_status === "settlement") {
-      const updateData = {
-        newStatus: "Paid",
-        shipping_status:
-          data.shipping_type === "Delivery"
-            ? "Packaged"
-            : data.shipping_type === "Pick Up" && "Ready",
-      };
-      await updateOrderStatus(token, id, updateData);
-      location.reload();
-      toast({
-        title: "Pesanan Sudah Terbayar",
-        status: "success",
-        duration: 2000,
-        position: "top",
-      });
-    } else if (response.data.transaction_status === "expire") {
-      const stock_product = {
-        stock_products: orderItems.map((item) => ({
-          product_id: item.product_id,
-          stock: item.Product.stock + item.quantity,
-        })),
-      };
-      const updateData = {
-        newStatus: "Canceled",
-      };
-      await updateOrderStatus(token, id, updateData);
-      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/stock`, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Cookie: `token=${cookieToken}`,
-        },
-        credentials: "include",
-        body: JSON.stringify(stock_product),
-      });
-      location.reload();
-      toast({
-        title: "Pesanan Sudah Kadaluarsa, Lakukan Pesananan Ulang",
-        status: "error",
-        duration: 2000,
-        position: "top",
-      });
-    } else {
-      toast({
-        title: "Pesanan Belum Terbayar",
-        status: "error",
-        duration: 2000,
-        position: "top",
-      });
+    try {
+      setIsLoading(true);
+      const response = await getTransactionStatus(token, id);
+      if (response.data.transaction_status === "settlement") {
+        const updateData = {
+          shipping_id: data.Shipping?.id,
+          newStatus: "Lunas",
+          shipping_status:
+            data.Shipping?.type === "Delivery"
+              ? "Barang di Kemas"
+              : data.Shipping?.type === "Pick Up" && "Barang Siap Diambil",
+        };
+        await updateOrderStatus(token, id, updateData);
+        location.reload();
+        toast({
+          title: "Pesanan Sudah Terbayar",
+          status: "success",
+          duration: 2000,
+          position: "top",
+        });
+      } else if (response.data.transaction_status === "expire") {
+        const stock_product = {
+          stock_products: orderItems.map((item) => ({
+            product_id: item.product_id,
+            stock: item.Product.stock + item.quantity,
+          })),
+        };
+        const updateData = {
+          newStatus: "Canceled",
+        };
+        await updateOrderStatus(token, id, updateData);
+        await updateProductStock(token, stock_product);
+        location.reload();
+        toast({
+          title: "Pesanan Sudah Kadaluarsa, Lakukan Pesananan Ulang",
+          status: "error",
+          duration: 2000,
+          position: "top",
+        });
+      } else {
+        toast({
+          title: "Pesanan Belum Terbayar",
+          status: "error",
+          duration: 2000,
+          position: "top",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,40 +96,87 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader fontSize={"md"}>Detail Pelanggan</ModalHeader>
+          <ModalHeader fontSize={"md"}>Detail Pesanan</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <div className="mb-2">
-              <Text fontWeight={"semibold"} fontSize={"sm"}>
-                Nama:
-              </Text>
-              <Text fontSize={"sm"}>{customerData.fullname}</Text>
+              <p className="text-sm font-semibold">
+                Nama:{" "}
+                <span className="font-normal">{customerData.fullname}</span>
+              </p>
             </div>
             <div className="mb-2">
-              <Text fontWeight={"semibold"} fontSize={"sm"}>
-                No HP
-              </Text>
-              <Text fontSize={"sm"}>{customerData.telephone}</Text>
+              <p className="text-sm font-semibold">
+                Telephone:{" "}
+                <span className="font-normal">{customerData.telephone}</span>
+              </p>
             </div>
-            {data.shipping_type === "Delivery" && (
+            <div className="mb-2">
+              <p className="text-sm font-semibold">
+                Metode Pengiriman:{" "}
+                <span className="font-normal">{data.Shipping?.type}</span>
+              </p>
+            </div>
+            <div className="mb-2">
+              <p className="text-sm font-semibold">
+                Status Pengiriman:{" "}
+                <span className="font-normal">{data.Shipping?.status}</span>
+              </p>
+            </div>
+            {data.Shipping?.type === "Delivery" && (
               <>
                 <div className="mb-2">
-                  <Text fontWeight={"semibold"} fontSize={"sm"}>
-                    Alamat
-                  </Text>
-                  <Text fontSize={"sm"}>{customerData.address}</Text>
+                  <p className="text-sm font-semibold">
+                    ID Pengiriman:{" "}
+                    <span className="font-normal">{data.Shipping?.id}</span>
+                  </p>
                 </div>
                 <div className="mb-2">
-                  <Text fontWeight={"semibold"} fontSize={"sm"}>
-                    Kota:
-                  </Text>
-                  <Text fontSize={"sm"}>{customerData.city}</Text>
+                  <p className="text-sm font-semibold">
+                    Kurir Pengiriman:{" "}
+                    <span className="font-normal uppercase">
+                      {data.Shipping?.courier}
+                    </span>
+                  </p>
                 </div>
                 <div className="mb-2">
-                  <Text fontWeight={"semibold"} fontSize={"sm"}>
-                    Kode Pos:
-                  </Text>
-                  <Text fontSize={"sm"}>{customerData.postal_code}</Text>
+                  <p className="text-sm font-semibold">
+                    Layanan Pengiriman:{" "}
+                    <span className="font-normal">
+                      {data.Shipping?.service}
+                    </span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Provinsi Tujuan:{" "}
+                    <span className="font-normal">
+                      {data.Shipping?.province}
+                    </span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Kota Tujuan:{" "}
+                    <span className="font-normal">{data.Shipping?.city}</span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Alamat Tujuan:{" "}
+                    <span className="font-normal">
+                      {data.Shipping?.address}
+                    </span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Estimasi Waktu Pengiriman:{" "}
+                    <span className="font-normal">
+                      {data.Shipping?.etd}{" "}
+                      {data.Shipping?.courier === "pos" ? "" : "Hari"}
+                    </span>
+                  </p>
                 </div>
               </>
             )}
@@ -149,6 +195,7 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
               <p className="text-sm font-medium">Re-check Status Pembayaran</p>
             </div>
             <button
+              disabled={isLoading}
               onClick={() => handleReCheckStatus(data.id)}
               className="text-sm py-1 px-2 font-medium rounded-lg text-[#feab3b] bg-orange-100 hover:bg-[#feab3b] hover:text-white transition-all"
             >
@@ -160,7 +207,7 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
       <div className="mb-4 space-y-4">
         <div className="flex items-center justify-between border-b border-gray-200 pb-2">
           <div className="text-base font-medium text-gray-900">
-            <p className="text-sm font-medium">Informasi Pelanggan</p>
+            <p className="text-sm font-medium">Detail Pesanan</p>
           </div>
           <button
             onClick={onOpen}
@@ -173,7 +220,7 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
       <div>
         <h2 className="text-lg font-medium text-gray-900">Informasi Pesanan</h2>
         <div className="mt-2 flex justify-between">
-          <p className="text-sm">Order Id</p>
+          <p className="text-sm">Id Pesanan</p>
           <p className="text-sm font-medium">{data.id}</p>
         </div>
         <div className="mt-2 flex justify-between">
@@ -183,10 +230,6 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
               ? data.payment_method.split("_").join(" ")
               : ""}
           </p>
-        </div>
-        <div className="mt-2 flex justify-between">
-          <p className="text-sm">Metode Pengiriman</p>
-          <p className="text-sm font-medium">{data.shipping_type}</p>
         </div>
         {data.bank !== "-" && (
           <div className="mt-2 flex justify-between">
@@ -204,7 +247,7 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
           <p className="text-sm">Status Pembayaran</p>
           <p
             className={`text-sm font-medium uppercase ${
-              data.status === "Paid"
+              data.status === "Lunas"
                 ? "text-green-500 bg-green-100 p-1 rounded-lg"
                 : data.status === "Pending"
                 ? "text-blue-500 bg-blue-100 p-1 rounded-lg"
@@ -216,47 +259,29 @@ const OrderSummary = ({ token, data, orderItems, customerData }) => {
             {data.status}
           </p>
         </div>
-        {/* {data.payment_method !== "COD" && data.shipping_type !== "Pick Up" && ( */}
         <div className="mt-2 flex justify-between items-center">
-          <p className="text-sm">Status Pengiriman</p>
-          <p className="text-sm font-medium">
-            {data.shipping_status === "Waiting"
-              ? "Menunggu Pembayaran"
-              : data.shipping_status === "Packaged"
-              ? "Barang di Kemas"
-              : data.shipping_status === "Ready"
-              ? "Barang Siap Diambil"
-              : data.shipping_status === "Delivered"
-              ? "Barang Dikirim"
-              : data.shipping_status === "Picked Up"
-              ? "Barang Telah Diambil"
-              : data.shipping_status === "Received" && "Barang Telah Diterima"}
-          </p>
+          <p className="text-sm">Tanggal Transaksi</p>
+          <p className="text-sm font-medium">{data.payment_date}</p>
         </div>
-        {/* )} */}
         {data.status === "Pending" &&
           data.payment_method === "bank_transfer" && (
             <div className="mt-2 flex justify-between items-center">
               <p className="text-sm">Lakukan Pembayaran Sebelum</p>
-              <p className="text-sm font-medium uppercase">{expireTime}</p>
+              <p className="text-sm font-medium">{expireTime}</p>
             </div>
           )}
-        <div className="mt-2 flex justify-between items-center">
-          <p className="text-sm">Tanggal Transaksi</p>
-          <p className="text-sm font-medium uppercase">{data.payment_date}</p>
-        </div>
-        {data.shipping_type === "Delivery" && (
+        {data.Shipping?.type === "Delivery" && (
           <div className="mt-2 flex justify-between items-center">
             <p className="text-sm">Ongkos Kirim</p>
             <p className="text-sm font-medium uppercase">
-              {formatPrice(data.shipping_cost)}
+              {formatPrice(data.Shipping?.cost)}
             </p>
           </div>
         )}
         <div className="mt-2 flex justify-between items-center">
           <p className="text-sm">Total Harga Barang</p>
           <p className="text-sm font-medium uppercase">
-            {formatPrice(data.total_price - data.shipping_cost)}
+            {formatPrice(data.total_price - data.Shipping?.cost)}
           </p>
         </div>
       </div>
