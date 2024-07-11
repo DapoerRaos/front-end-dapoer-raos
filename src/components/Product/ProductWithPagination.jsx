@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import ButtonCart from "./utils/ButtonCart";
 import Pagination from "../utils/Pagination";
 import { getProducts } from "@/libs/product-libs";
+import { formatWeight } from "@/libs/utils/WeightFormatter";
 
 const ProductWithPagination = ({ searchKeyword, token }) => {
   const [productData, setProductData] = useState([]);
@@ -61,19 +62,32 @@ const ProductWithPagination = ({ searchKeyword, token }) => {
                   alt={product.name}
                   sizes="200"
                 />
-                <Text color={"gray.600"} fontSize={"sm"}>
-                  {product.category_name}
-                </Text>
                 <div className="flex justify-between items-center">
-                  <Text fontWeight={"bold"} fontSize={{ base: "sm", md: "md" }}>
+                  <Text color={"gray.600"} fontSize={{ base: "xs", md: "sm" }}>
+                    {product.category_name}
+                  </Text>
+                  {product.stock <= 3 && (
+                    <Text color={"red.500"} fontSize={{ base: "xs", md: "sm" }}>
+                      {product.stock === 0
+                        ? "Stok Habis"
+                        : `Stok Tersisa ${product.stock}`}
+                    </Text>
+                  )}
+                </div>
+                <div className="flex justify-between items-center">
+                  <Text fontWeight={"bold"} fontSize={{ base: "xs", md: "md" }}>
                     {product.name}
                   </Text>
                   <Text color={"gray.600"} fontSize={"xs"}>
-                    {product.weight} Kg
+                    {formatWeight(product.weight)}
                   </Text>
                 </div>
                 <div className="flex justify-between items-center">
-                  <Text color={"#feab3b"} fontWeight={"semibold"}>
+                  <Text
+                    color={"#feab3b"}
+                    fontWeight={"semibold"}
+                    fontSize={{ base: "xs", md: "lg" }}
+                  >
                     {formatPrice(product.price)}
                   </Text>
                   {product.stock !== 0 && (
