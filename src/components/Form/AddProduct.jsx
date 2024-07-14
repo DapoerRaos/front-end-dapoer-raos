@@ -192,13 +192,12 @@ const FormAddProduct = ({ category, token }) => {
           w={{ base: "100%", md: "66%" }}
           isInvalid={!!errors.beratProduk}
         >
-          <FormLabel fontSize={"sm"}>Berat Produk (kg)</FormLabel>
+          <FormLabel fontSize={"sm"}>Berat Produk (gram)</FormLabel>
           <Input
             {...register("weight", {
               required: "Berat Produk wajib diisi",
             })}
             type="number"
-            step={0.01}
             focusBorderColor="#feab3b"
             fontSize={"sm"}
             borderColor={"gray.300"}
