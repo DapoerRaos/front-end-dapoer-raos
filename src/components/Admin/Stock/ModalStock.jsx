@@ -48,13 +48,13 @@ const ModalStock = ({ id, token }) => {
   const handleUpdateStock = async (data) => {
     const response = await updateStock(id, token, data);
     onClose();
-    location.reload();
     toast({
       title: response.message,
       status: "success",
       duration: 2000,
       position: "top",
     });
+    location.reload();
   };
 
   const handleCloseModal = () => {
