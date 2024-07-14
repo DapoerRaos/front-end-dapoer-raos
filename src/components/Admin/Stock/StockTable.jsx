@@ -69,12 +69,25 @@ const StockTable = ({ searchKeyword, token }) => {
             ) : (
               productData.map((product, index) => {
                 return (
-                  <Tr key={index} color={"gray.600"}>
+                  <Tr
+                    key={index}
+                    className={
+                      product.stock === 0
+                        ? "bg-red-500 text-white"
+                        : "text-gray-600"
+                    }
+                  >
                     <Td>{index + 1}</Td>
-                    <Td>{product.name}</Td>
+                    <Td>
+                      {product.stock === 0
+                        ? `${product.name} (Stok habis)`
+                        : product.stock <= 3
+                        ? `${product.name} (Stok Menipis)`
+                        : product.name}
+                    </Td>
                     <Td>{product.category_name}</Td>
                     <Td>{product.stock}</Td>
-                    <Td>
+                    <Td color={"gray.600"} bg={"white"}>
                       <ModalStock id={product.id} token={token} />
                     </Td>
                   </Tr>
