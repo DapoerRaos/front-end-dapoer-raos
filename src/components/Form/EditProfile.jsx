@@ -11,7 +11,6 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Textarea,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -40,7 +39,6 @@ const FormEditProfile = ({ id, customerData, token }) => {
     }
 
     try {
-      console.log(data);
       const response = await editProfile(token, data);
       successToast(response.message);
       location.reload();
@@ -183,7 +181,7 @@ const FormEditProfile = ({ id, customerData, token }) => {
       <div className="grid grid-cols-1 md:grid-cols-2">
         <FormControl
           id="confirmPassword"
-          mb={3}
+          mb={4}
           w={{ base: "100%", md: "66%" }}
           isInvalid={!!errors.confirmPassword || !passwordMatch}
         >
@@ -212,66 +210,7 @@ const FormEditProfile = ({ id, customerData, token }) => {
             {!passwordMatch && "Password tidak cocok"}
           </FormErrorMessage>
         </FormControl>
-        <FormControl
-          id="postal_code"
-          mb={3}
-          w={{ base: "100%", md: "66%" }}
-          isInvalid={!!errors.postal_code}
-        >
-          <FormLabel fontSize={"sm"}>Kode Pos</FormLabel>
-          <Input
-            {...register("postal_code")}
-            type="text"
-            focusBorderColor="#feab3b"
-            fontSize={"sm"}
-            defaultValue={customerData.postal_code}
-            placeholder={customerData.postal_code}
-            resize={"none"}
-            borderColor={"gray.300"}
-          />
-          <FormErrorMessage>
-            {errors.address && errors.address.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl
-          id="city"
-          mb={3}
-          w={{ base: "100%", md: "66%" }}
-          isInvalid={!!errors.city}
-        >
-          <FormLabel fontSize={"sm"}>Kota</FormLabel>
-          <Input
-            {...register("city")}
-            type="text"
-            focusBorderColor="#feab3b"
-            fontSize={"sm"}
-            defaultValue={customerData.city}
-            placeholder={customerData.city}
-            resize={"none"}
-            borderColor={"gray.300"}
-          />
-          <FormErrorMessage>
-            {errors.address && errors.address.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl id="address" mb={3} isInvalid={!!errors.address}>
-          <FormLabel fontSize={"sm"}>Alamat</FormLabel>
-          <Textarea
-            {...register("address")}
-            type="text"
-            focusBorderColor="#feab3b"
-            fontSize={"sm"}
-            defaultValue={customerData.address}
-            placeholder={customerData.address}
-            resize={"none"}
-            borderColor={"gray.300"}
-          />
-          <FormErrorMessage>
-            {errors.address && errors.address.message}
-          </FormErrorMessage>
-        </FormControl>
       </div>
-
       <Button
         bg={"#feab3b"}
         color={"white"}
