@@ -2,11 +2,15 @@ import FormEditProfile from "@/components/Form/EditProfile";
 import ProfileLayout from "@/components/Layouts/ProfileLayout";
 import { getCustomerById } from "@/libs/customer-libs";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const page = async ({ params }) => {
   const { id } = params;
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
+  if (!token) {
+    redirect("/");
+  }
 
   const userCustomer = await getCustomerById(token);
   return (
