@@ -14,7 +14,7 @@ export default function Register() {
 
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"} bg={"gray.100"}>
-      <div>
+      <Stack spacing={4} mx={"auto"} w={{ base: "sm", md: "md" }} py={4} px={6}>
         <ButtonBack />
         <Flex justifyContent={"center"} alignItems={"center"} mb={4}>
           <Image
@@ -28,7 +28,7 @@ export default function Register() {
           </Text>
         </Flex>
         <RegisterForm />
-      </div>
+      </Stack>
     </Flex>
   );
 }
