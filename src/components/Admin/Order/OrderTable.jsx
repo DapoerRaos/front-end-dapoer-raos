@@ -46,7 +46,6 @@ const OrderTable = ({ searchKeyword, token }) => {
               <Th>Tipe Pengiriman</Th>
               <Th>Status Pengiriman</Th>
               <Th>Metode Pembayaran</Th>
-              <Th>Action</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -61,13 +60,12 @@ const OrderTable = ({ searchKeyword, token }) => {
                 return (
                   <Tr key={index} color={"gray.600"}>
                     <Td>{index + 1}</Td>
-                    {/* <Td>{item.id}</Td> */}
                     <Td>{item.Customer.fullname}</Td>
                     <Td>{formatPrice(item.total_price)}</Td>
                     <Td>
                       <p
                         className={`text-sm font-medium uppercase text-center ${
-                          item.status === "Paid"
+                          item.status === "Lunas"
                             ? "text-green-500 bg-green-100 p-1 rounded-lg"
                             : item.status === "Pending"
                             ? "text-blue-500 bg-blue-100 p-1 rounded-lg"
@@ -79,23 +77,8 @@ const OrderTable = ({ searchKeyword, token }) => {
                         {item.status}
                       </p>
                     </Td>
-                    <Td>{item.shipping_type}</Td>
-                    <Td>
-                      {item.shipping_status === "Canceled"
-                        ? "Dibatalkan"
-                        : item.shipping_status === "Waiting"
-                        ? "Menunggu Pembayaran"
-                        : item.shipping_status === "Packaged"
-                        ? "Barang di Kemas"
-                        : item.shipping_status === "Ready"
-                        ? "Barang Siap Diambil"
-                        : item.shipping_status === "Delivered"
-                        ? "Barang Dikirim"
-                        : item.shipping_status === "Picked Up"
-                        ? "Barang Telah Diambil"
-                        : item.shipping_status === "Received" &&
-                          "Barang Telah Diterima"}
-                    </Td>
+                    <Td>{item.Shipping?.type}</Td>
+                    <Td>{item.Shipping?.status}</Td>
                     <Td>
                       <p className="text-sm capitalize">
                         {item.payment_method
@@ -103,17 +86,13 @@ const OrderTable = ({ searchKeyword, token }) => {
                           : ""}
                       </p>
                     </Td>
-                    {/* {item.bank !== "" && (
-                      <Td>
-                        <p className="text-sm uppercase">{item.bank}</p>
-                      </Td>
-                    )} */}
                     <Td>
                       <DropdownAction
                         id={item.id}
                         status={item.status}
-                        shippingStatus={item.shipping_status}
-                        shipping_type={item.shipping_type}
+                        shipping_id={item.shipping_id}
+                        shippingStatus={item.Shipping?.status}
+                        shipping_type={item.Shipping?.type}
                         token={token}
                       />
                     </Td>
