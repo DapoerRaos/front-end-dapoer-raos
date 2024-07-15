@@ -15,6 +15,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import DropdownAction from "./utils/DropdownAction";
 import { getProducts } from "@/libs/product-libs";
 import Pagination from "@/components/utils/Pagination";
+import { formatWeight } from "@/libs/utils/WeightFormatter";
 
 const ProductTable = ({ searchKeyword, token }) => {
   const [productData, setProductData] = useState([]);
@@ -59,7 +60,6 @@ const ProductTable = ({ searchKeyword, token }) => {
               <Th>Harga</Th>
               <Th>Berat</Th>
               <Th>Stok</Th>
-              <Th>Action</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -72,13 +72,26 @@ const ProductTable = ({ searchKeyword, token }) => {
             ) : (
               productData.map((product, index) => {
                 return (
-                  <Tr key={index} color={"gray.600"}>
+                  <Tr
+                    key={index}
+                    className={
+                      product.stock === 0
+                        ? "bg-red-500 text-white"
+                        : "text-gray-600"
+                    }
+                  >
                     <Td>{index + 1}</Td>
-                    <Td>{product.name}</Td>
-                    <Td>{formatPrice(product.price)}</Td>
-                    <Td>{product.weight} Kg</Td>
-                    <Td>{product.stock}</Td>
                     <Td>
+                      {product.stock === 0
+                        ? `${product.name} (Stok habis)`
+                        : product.stock <= 3
+                        ? `${product.name} (Stok Menipis)`
+                        : product.name}
+                    </Td>
+                    <Td>{formatPrice(product.price)}</Td>
+                    <Td>{formatWeight(product.weight)}</Td>
+                    <Td>{product.stock}</Td>
+                    <Td color={"gray.600"} bg={"white"}>
                       <DropdownAction id={product.id} token={token} />
                     </Td>
                   </Tr>
