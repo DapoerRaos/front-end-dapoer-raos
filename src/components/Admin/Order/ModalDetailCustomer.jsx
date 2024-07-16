@@ -2,7 +2,6 @@
 
 import {
   Button,
-  ListItem,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,12 +9,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
-  UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react";
 
-const ModalDetailCustomer = ({ customerData }) => {
+const ModalDetailCustomer = ({ data, customerData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleMessageCustomer = (telephone, customerName) => {
@@ -30,7 +27,7 @@ const ModalDetailCustomer = ({ customerData }) => {
     <div className="mb-4 space-y-4">
       <div className="flex items-center justify-between border-b border-gray-200 pb-2">
         <div className="text-base font-medium text-gray-900">
-          <p className="text-sm font-medium">Detail Pelanggan</p>
+          <p className="text-sm font-medium">Detail Pesanan</p>
         </div>
         <button
           onClick={onOpen}
@@ -42,33 +39,89 @@ const ModalDetailCustomer = ({ customerData }) => {
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader fontSize={"md"}>Detail Pelanggan</ModalHeader>
+          <ModalHeader fontSize={"md"}>Detail Pesanan</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <div className="mb-2">
-              <Text fontWeight={"semibold"} fontSize={"sm"}>
-                Nama:
-              </Text>
-              <Text fontSize={"sm"}>{customerData.fullname}</Text>
+              <p className="text-sm font-semibold">
+                Nama:{" "}
+                <span className="font-normal">{customerData.fullname}</span>
+              </p>
             </div>
             <div className="mb-2">
-              <Text fontWeight={"semibold"} fontSize={"sm"}>
-                Email:
-              </Text>
-              <Text fontSize={"sm"}>{customerData.email}</Text>
+              <p className="text-sm font-semibold">
+                Telephone:{" "}
+                <span className="font-normal">{customerData.telephone}</span>
+              </p>
             </div>
             <div className="mb-2">
-              <Text fontWeight={"semibold"} fontSize={"sm"}>
-                No HP
-              </Text>
-              <Text fontSize={"sm"}>{customerData.telephone}</Text>
+              <p className="text-sm font-semibold">
+                Metode Pengiriman:{" "}
+                <span className="font-normal">{data.Shipping?.type}</span>
+              </p>
             </div>
             <div className="mb-2">
-              <Text fontWeight={"semibold"} fontSize={"sm"}>
-                Alamat
-              </Text>
-              <Text fontSize={"sm"}>{customerData.address}</Text>
+              <p className="text-sm font-semibold">
+                Status Pengiriman:{" "}
+                <span className="font-normal">{data.Shipping?.status}</span>
+              </p>
             </div>
+            {data.Shipping?.type === "Delivery" && (
+              <>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    ID Pengiriman:{" "}
+                    <span className="font-normal">{data.Shipping?.id}</span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Kurir Pengiriman:{" "}
+                    <span className="font-normal uppercase">
+                      {data.Shipping?.courier}
+                    </span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Layanan Pengiriman:{" "}
+                    <span className="font-normal">
+                      {data.Shipping?.service}
+                    </span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Provinsi Tujuan:{" "}
+                    <span className="font-normal">
+                      {data.Shipping?.province}
+                    </span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Kota Tujuan:{" "}
+                    <span className="font-normal">{data.Shipping?.city}</span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Alamat Tujuan:{" "}
+                    <span className="font-normal">
+                      {data.Shipping?.address}
+                    </span>
+                  </p>
+                </div>
+                <div className="mb-2">
+                  <p className="text-sm font-semibold">
+                    Estimasi Waktu Pengiriman:{" "}
+                    <span className="font-normal">
+                      {data.Shipping?.etd} Hari
+                    </span>
+                  </p>
+                </div>
+              </>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="red" size={"sm"} mr={3} onClick={onClose}>
