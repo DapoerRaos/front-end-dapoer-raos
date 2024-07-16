@@ -1,4 +1,5 @@
 import { updateOrderStatus } from "@/libs/order-libs";
+import { updateProductStock } from "@/libs/product-libs";
 import {
   Modal,
   ModalOverlay,
@@ -12,12 +13,14 @@ import {
   FormLabel,
   Select,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 const ModalUpdate = ({
   token,
   order_id,
+  shipping_id,
   isOpen,
   onClose,
   title,
@@ -28,6 +31,8 @@ const ModalUpdate = ({
 }) => {
   const [paymentStatusValue, setPaymentStatusValue] = useState("");
   const [shippingStatusValue, setShippingStatusValue] = useState("");
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePaymentStatusChange = (event) => {
     const selectedPaymentStatus = event.target.value;
@@ -41,7 +46,18 @@ const ModalUpdate = ({
 
   const handleUpdatePaymentStatus = async (status) => {
     const updateData = {
+      shipping_id: shipping_id,
       newStatus: status,
+      shipping_status:
+        status === "Lunas"
+          ? shipping_type === "Delivery"
+            ? "Barang di Kemas"
+            : shipping_type === "Pick Up"
+            ? "Barang Telah Diambil"
+            : ""
+          : status === "Canceled"
+          ? "Dibatalkan"
+          : "",
     };
     await updateOrderStatus(token, order_id, updateData);
     if (status === "Canceled") {
@@ -51,28 +67,41 @@ const ModalUpdate = ({
           stock: item.Product.stock + item.quantity,
         })),
       };
-      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/stock`, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        body: JSON.stringify(stock_product),
-      });
+      await updateProductStock(token, stock_product);
     }
+    toast({
+      title: "Status Pembayaran berhasil diperbarui",
+      status: "success",
+      duration: 3000,
+      position: "top",
+      isClosable: true,
+    });
     onClose();
     location.reload();
   };
 
   const handleUpdateShippingStatus = async (status) => {
-    const updateData = {
-      shipping_status: status,
-    };
-    await updateOrderStatus(token, order_id, updateData);
-    onClose();
-    location.reload();
+    try {
+      setIsLoading(true);
+      const updateData = {
+        shipping_id: shipping_id,
+        shipping_status: status,
+      };
+      await updateOrderStatus(token, order_id, updateData);
+      onClose();
+      toast({
+        title: "Status Pembayaran berhasil diperbarui",
+        status: "success",
+        duration: 3000,
+        position: "top",
+        isClosable: true,
+      });
+      location.reload();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -104,7 +133,9 @@ const ModalUpdate = ({
                 value={paymentStatusValue}
                 onChange={handlePaymentStatusChange}
               >
-                {paymentStatus !== "Paid" && <option value="Paid">Paid</option>}
+                {paymentStatus !== "Lunas" && (
+                  <option value="Lunas">Lunas</option>
+                )}
                 {paymentStatus !== "Pending" && (
                   <option value="Pending">Pending</option>
                 )}
@@ -117,18 +148,7 @@ const ModalUpdate = ({
             title === "Shipping Status" && (
               <>
                 <Text fontSize="sm" mb={4}>
-                  Status Pengiriman Saat ini:{" "}
-                  {shippingStatus === "Waiting"
-                    ? "Menunggu Pembayaran"
-                    : shippingStatus === "Packaged"
-                    ? "Barang di Kemas"
-                    : shippingStatus === "Ready"
-                    ? "Barang Siap Diambil"
-                    : shippingStatus === "Delivered"
-                    ? "Barang Dikirim"
-                    : shippingStatus === "Picked Up"
-                    ? "Barang Telah Diambil"
-                    : shippingStatus === "Received" && "Barang Telah Diterima"}
+                  Status Pengiriman Saat ini: {shippingStatus}
                 </Text>
                 <FormControl
                   id="shippingStatus"
@@ -147,20 +167,27 @@ const ModalUpdate = ({
                     onChange={handleShippingStatusChange}
                   >
                     {paymentStatus === "Pending" && (
-                      <option value="Waiting">Menunggu Pembayaran</option>
+                      <option value="Menunggu Pembayaran">
+                        Menunggu Pembayaran
+                      </option>
                     )}
                     {shipping_type === "Pick Up" ? (
                       <>
-                        <option value="Canceled">Dibatalkan</option>
-                        <option value="Ready">Barang Siap Diambil</option>
-                        <option value="Picked Up">Barang Telah Diambil</option>
+                        <option value="Dibatalkan">Dibatalkan</option>
+                        <option value="Barang Siap Diambil">
+                          Barang Siap Diambil
+                        </option>
+                        <option value="Barang Telah Diambil">
+                          Barang Telah Diambil
+                        </option>
                       </>
                     ) : (
                       shipping_type === "Delivery" && (
                         <>
-                          <option value="Packaged">Barang Dikemas</option>
-                          <option value="Delivered">Barang Dikirim</option>
-                          <option value="Received">
+                          <option value="Dibatalkan">Dibatalkan</option>
+                          <option value="Barang Dikemas">Barang Dikemas</option>
+                          <option value="Barang Dikirim">Barang Dikirim</option>
+                          <option value="Barang Telah Diterima">
                             Barang Telah Diterima
                           </option>
                         </>
@@ -187,12 +214,13 @@ const ModalUpdate = ({
                 colorScheme="blue"
                 mr={3}
                 onClick={() => handleUpdateShippingStatus(shippingStatusValue)}
+                isDisabled={isLoading}
               >
                 Update
               </Button>
             )
           )}
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose} isDisabled={isLoading}>
             Batal
           </Button>
         </ModalFooter>
