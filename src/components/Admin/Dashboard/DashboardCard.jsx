@@ -21,7 +21,7 @@ const DashboardCard = ({ token }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const orderStatus = await getOrderByStatus(token, "Paid");
+        const orderStatus = await getOrderByStatus(token, "Lunas");
         setIncome(orderStatus.data.income);
         const product = await getProducts();
         setTotalProduct(product.pagination.total);
@@ -69,15 +69,15 @@ const DashboardCard = ({ token }) => {
         <Link href={"/admin/dashboard/orders"}>
           <div className="flex justify-between text-red-500">
             <h2 className="text-xl font-medium mb-2">Total Pesanan</h2>
-            <Package size={30} />
+            <ClipboardText size={30} />
           </div>
           <p className="text-gray-600">{totalOrder} Pesanan</p>
         </Link>
       </div>
-      <div className=" shadow-md p-4 rounded-xl hover:shadow-xl transition-all">
+      {/* <div className=" shadow-md p-4 rounded-xl hover:shadow-xl transition-all">
         <h2 className="text-xl font-medium mb-2">Lain-lain</h2>
         <p className="text-gray-600">Informasi Lain</p>
-      </div>
+        </div> */}
     </div>
   );
 };
