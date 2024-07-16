@@ -15,6 +15,7 @@ import { getOrderStatusById } from "@/libs/order-libs";
 const DropdownAction = ({
   id,
   status,
+  shipping_id,
   shippingStatus,
   shipping_type,
   token,
@@ -45,6 +46,7 @@ const DropdownAction = ({
       <ModalUpdate
         token={token}
         order_id={id}
+        shipping_id={shipping_id}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         title={title}
@@ -67,7 +69,7 @@ const DropdownAction = ({
           <Link href={`/admin/dashboard/orders/detail/${id}`}>
             <MenuItem icon={<ViewIcon />}>Detail</MenuItem>
           </Link>
-          {status !== "Paid" && status !== "Canceled" && (
+          {status !== "Lunas" && status !== "Canceled" && (
             <MenuItem
               icon={<EditIcon />}
               onClick={() => handleOpenModal("Payment Status")}
@@ -75,9 +77,9 @@ const DropdownAction = ({
               Update Status Pembayaran
             </MenuItem>
           )}
-          {shippingStatus !== "Picked Up" &&
-            shippingStatus !== "Received" &&
-            shippingStatus !== "Canceled" && (
+          {shippingStatus !== "Barang Telah Diambil" &&
+            shippingStatus !== "Barang Telah Diterima" &&
+            shippingStatus !== "Dibatalkan" && (
               <MenuItem
                 icon={<EditIcon />}
                 onClick={() => handleOpenModal("Shipping Status")}
