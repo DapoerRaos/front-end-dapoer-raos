@@ -1,13 +1,5 @@
 import StockControl from "@/components/Admin/Stock/StockControl";
 import DashboardLayout from "@/components/Layouts/DashboardLayout";
-import {
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
-  TabIndicator,
-} from "@chakra-ui/react";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
